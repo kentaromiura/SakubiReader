@@ -1,5 +1,7 @@
 package com.blogspot.mykenta.sakubireader
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -124,12 +126,12 @@ class MainActivity : AppCompatActivity() {
         }
         if (id == R.id.action_toggle_coloring) {
             colouring = !colouring
-            //val vp = (mViewPager as ViewPager)
             mSectionsPagerAdapter!!.notifyDataSetChanged()
-            /*
-            vp.adapter = null
-            vp.adapter = mSectionsPagerAdapter
-            */
+        }
+
+        if (id == R.id.action_repo) {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/kentaromiura/SakubiReader"))
+            startActivity(browserIntent)
         }
         return super.onOptionsItemSelected(item)
     }

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SakubiReader</string>
+    <string name="action_toc">Table of contents</string>
+    <string name="action_toggle_coloring">Toggle colours on/off</string>
+</resources>

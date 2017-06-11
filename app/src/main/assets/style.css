@@ -1,0 +1,41 @@
+@font-face {
+    font-family: notoinres;src: url('file:///android_asset/NotoSansCJKjp-Regular.otf');
+}
+
+* {
+    font-family: notoinres, Arial, sans-serif;
+}
+
+.copula {
+  color:red;
+}
+
+.possession {
+  color: blue;
+}
+
+.ni, .he, .kare {
+    color: green;
+}
+
+.te {
+    color: purple;
+}
+.ga {
+    color: #669999
+}
+.wa {
+    color: #3366ff;
+}
+.o {
+    color: #66ccff;
+}
+.ka {
+    color: gray;
+}
+.yo {
+    color: darkgray;
+}
+.mo {
+    color: #ffcc00;
+}

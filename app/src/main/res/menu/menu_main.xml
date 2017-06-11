@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.blogspot.mykenta.sakubireader.MainActivity">
+    <item
+        android:id="@+id/action_toc"
+        android:orderInCategory="100"
+        android:title="@string/action_toc"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_toggle_coloring"
+        android:orderInCategory="100"
+        android:title="@string/action_toggle_coloring"
+        app:showAsAction="never" />
+</menu>

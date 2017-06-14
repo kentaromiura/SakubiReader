@@ -157,9 +157,15 @@ class MainActivity : AppCompatActivity() {
                         val page = arguments.getBundle(ARG_IDS).getInt(urlData)
                         (container as ViewPager).currentItem = page
                         return true
+                    } else {
+                        if (url != null) {
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            startActivity(browserIntent)
+                            return true;
+                        }
                     }
 
-                    return super.shouldOverrideUrlLoading(view, url)
+                    return super.shouldOverrideUrlLoading(view, url as String?)
                 }
             })
             return rootView

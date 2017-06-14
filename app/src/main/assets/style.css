@@ -39,3 +39,12 @@
 .mo {
     color: #ffcc00;
 }
+.kanji, .katakana {
+    padding-right:0.3em;
+    padding-left: 0.3em;
+    font-weight: 600;
+}
+
+.example {
+    white-space:pre-line;
+}

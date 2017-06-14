@@ -25,6 +25,7 @@ import android.webkit.WebViewClient
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.safety.Whitelist
 import java.nio.charset.Charset
 
 fun getCopyWithoutChildrenSections(element: Element) : Element {
@@ -77,7 +78,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val document = Jsoup.parse(getSakubiHTML())
-
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
@@ -184,25 +184,37 @@ class MainActivity : AppCompatActivity() {
             fun getSection(element: Element): String {
 
                 if (colouring) {
+                    val tmp = Document("")
+                    tmp.appendChild(element)
+                    tmp.outputSettings(Document.OutputSettings().prettyPrint(false))
 
                     return element.html()
-                            .replace("に", "<b class=ni>に</b>")
-                            .replace("へ", "<b class=he>へ</b>")
-                            .replace("から", "<b class=kare>から</b>")
-                            .replace("でした", "<b class=copula>でした</b>")
-                            .replace("だった", "<b class=copula>だった</b>")
-                            .replace("だ", "<b class=copula>だ</b>")
-                            .replace("です", "<b class=copula>です</b>")
-                            .replace("の", "<b class=possession>の</b>")
-                            .replace("て", "<b class=te>て</b>")
-                            .replace("が", "<b class=ga>が</b>")
-                            .replace("は", "<b class=wa>は</b>")
-                            .replace("を", "<b class=o>を</b>")
-                            .replace("か", "<b class=ka>か</b>")
-                            .replace("と", "<b class=yo>と</b>")
-                            .replace("も", "<b class=mo>も</b>")
-                            //  fix exceptions
-                            .replace("<b class=ka>か</b>ら", "から")
+                            .replace(Regex("[^ァ-ン\u3400-\u4DB5\u4E00-\u9FCB\uF900-\uFA6A><！a-zA-Z:0-9\"',.()!\\-\\s]+"), {
+                              when(it.value) {
+                                  "に" -> "<b class=ni>に</b>"
+                                  "へ" -> "<b class=he>へ</b>"
+                                  "から" -> "<b class=kare>から</b>"
+                                  "でした" -> "<b class=copula>でした</b>"
+                                  "だった" -> "<b class=copula>だった</b>"
+                                  "だ" -> "<b class=copula>だ</b>"
+                                  "です" -> "<b class=copula>です</b>"
+                                  "の" -> "<b class=possession>の</b>"
+                                  "て" -> "<b class=te>て</b>"
+                                  "が" -> "<b class=ga>が</b>"
+                                  "は" -> "<b class=wa>は</b>"
+                                  "を" -> "<b class=o>を</b>"
+                                  "か" -> "<b class=ka>か</b>"
+                                  "と" -> "<b class=yo>と</b>"
+                                  "も" -> "<b class=mo>も</b>"
+                                  else -> it.value
+                              }
+                            })
+                            .replace(Regex("[ァ-ン]+"), {
+                                "<b class=katakana>${it.value}</b>"
+                            })
+                            .replace(Regex("[\u3400-\u4DB5\u4E00-\u9FCB\uF900-\uFA6A]+"), {
+                                "<b class=kanji>${it.value}</b>"
+                            })
                             .replace("href=\"#", "href=\"findid://")
                 } else {
                     return element.html()

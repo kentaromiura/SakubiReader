@@ -2,30 +2,21 @@ package com.blogspot.mykenta.sakubireader
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.os.Bundle
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.PagerAdapter
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.webkit.WebResourceRequest
+import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
+import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
-
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.safety.Whitelist
 import java.nio.charset.Charset
 
 fun getCopyWithoutChildrenSections(element: Element) : Element {
@@ -252,6 +243,7 @@ class MainActivity : AppCompatActivity() {
     inner class SectionsPagerAdapter(fm: FragmentManager, val document: Document, val style: String, val bundleOfIDS: Bundle) : FragmentStatePagerAdapter(fm) {
 
         override fun getItemPosition(`object`: Any?): Int {
+            // needed to refresh view when toggle colours is used.
             return PagerAdapter.POSITION_NONE
         }
 

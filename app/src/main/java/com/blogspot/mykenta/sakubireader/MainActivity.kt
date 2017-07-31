@@ -1,8 +1,11 @@
 package com.blogspot.mykenta.sakubireader
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -18,6 +21,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.nio.charset.Charset
+import android.os.AsyncTask
+
+var HCBugFixed: Boolean = false;
 
 fun getCopyWithoutChildrenSections(element: Element) : Element {
     val copy = element.clone()
@@ -47,7 +53,15 @@ class MainActivity : AppCompatActivity() {
     private var mViewPager: ViewPager? = null
 
     fun getStyle(): String {
-        val input_stream = this.assets.open("style.css")
+        var style_file = "style.css"
+
+        if (
+            Build.VERSION.SDK_INT === 13
+        ) {
+            style_file = "style.hc.css"
+        }
+
+        val input_stream = this.assets.open(style_file)
         val size = input_stream.available()
         val buffer = ByteArray(size)
         input_stream.read(buffer)
@@ -81,6 +95,57 @@ class MainActivity : AppCompatActivity() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container) as ViewPager
         mViewPager!!.adapter = mSectionsPagerAdapter
+
+        val context = this
+        // HC has an issue with first 2 pages not showing up, this hack makes them load...
+        if (Build.VERSION.SDK_INT === 13) {
+
+            class FixHCBug() : AsyncTask<Void, Void, String>() {
+                private var ad: ProgressDialog? = null
+                override fun doInBackground(vararg params: Void?): String? {
+                    Thread.sleep(1000)
+                    return null
+                }
+
+                override fun onPreExecute() {
+                    super.onPreExecute()
+                    ad = ProgressDialog(context)
+                    ad!!.setCancelable(false)
+                    ad!!.setMessage("Fixing honeycomb bugs")
+                    ad!!.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+                    ad!!.show()
+                }
+
+                override fun onPostExecute(result: String?) {
+                    super.onPostExecute(result)
+                    Handler().postDelayed(Runnable {
+                        Handler().postDelayed(Runnable {
+                            (mViewPager as ViewPager).setCurrentItem(4)
+                            Handler().postDelayed(Runnable {
+                                (mViewPager as ViewPager).setCurrentItem(3)
+                                Handler().postDelayed(Runnable {
+                                    (mViewPager as ViewPager).setCurrentItem(2)
+                                    Handler().postDelayed(Runnable {
+                                        (mViewPager as ViewPager).setCurrentItem(1)
+                                        Handler().postDelayed(Runnable {
+                                            (mViewPager as ViewPager).setCurrentItem(0, true)
+                                            ad!!.dismiss()
+                                        }, 500)
+                                    }, 500)
+                                }, 500)
+                            }, 500)
+                        }, 500)
+
+                    }, 1)
+                }
+            }
+
+            if(!HCBugFixed) {
+                FixHCBug().execute()
+                HCBugFixed = true
+            }
+
+        }
 
     }
 
@@ -136,9 +201,10 @@ class MainActivity : AppCompatActivity() {
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater!!.inflate(R.layout.fragment_main, container, false)
             val webview = rootView.findViewById(R.id.webview) as WebView
+            webview.getSettings().setBuiltInZoomControls(true);
             webview.loadUrl("about:blank")
             val style = arguments.getString(ARG_STYLE)
-            webview.loadDataWithBaseURL("file:///android_asset/", "<style>$style</style>" + arguments.getString(ARG_TEXT) + "<br /><br /><br />", "text/html", "utf-8", null)
+            webview.loadDataWithBaseURL("file:///android_asset/", "<style type=\"text/css\">$style</style>" + arguments.getString(ARG_TEXT) + "<br /><br /><br />", "text/html", "utf-8", null)
 
             webview.setWebViewClient(object: WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {

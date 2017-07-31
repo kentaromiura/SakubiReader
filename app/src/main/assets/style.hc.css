@@ -1,16 +1,20 @@
-@font-face {
-    font-family: notoinres;
-    src: url('/NotoSansCJKjpRegular.otf') format('opentype');
-}
-
+/* HoneyComb seems not working with font declaration, but Arial seems weirdly ok...
 * {
-    font-family: notoinres, Arial, sans-serif;
+    font-family: Roboto, Droid, Arial, sans-serif;
 }
-
+*/
+@font-face {
+    font-family: NotoInRes;
+    src: url("file:///android_asset/NotoSansCJKjpRegular.otf");
+    font-size: medium;
+    text-align: justify;
+}
+* {
+    font-family: NotoInRes, arial;
+}
 i {
-    font-family: Arial;
+    font-family: Georgia, Arial, serif;
 }
-
 .copula {
   color:red;
 }
@@ -47,7 +51,8 @@ i {
 .kanji, .katakana {
     padding-right:0.3em;
     padding-left: 0.3em;
-    font-weight: 600;
+    font-weight: bolder;
+    font-size:1.1em;
 }
 
 .example {
